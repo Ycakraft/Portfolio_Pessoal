@@ -320,6 +320,12 @@ button { font: inherit; color: inherit; }
 .mail textarea:focus-visible { outline: none; }
 .mfoot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-top: 1px solid var(--tint); }
 .mfoot small { color: var(--dim); font-size: 12px; }
+.mwa { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-top: 1px solid var(--tint); background: var(--glass-2); }
+.mwa small { color: var(--dim); font-size: 12px; }
+.btn.wa { background: #25D366; color: #06210F; border-color: transparent; text-decoration: none; white-space: nowrap; }
+.btn.wa:hover { filter: brightness(1.06); }
+.btn.wa svg { width: 16px; height: 16px; }
+.mbtns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 
 /* ---------- app: stack ---------- */
@@ -411,6 +417,10 @@ table.stk { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 
   .av { width: 68px; height: 68px; }
   .facts { grid-template-columns: minmax(0, 1fr); }
   .mrow { grid-template-columns: 84px minmax(0, 1fr); }
+  .mto small { display: none; }
+  .mto span { white-space: nowrap; }
+  .mfoot .btn, .mwa .btn { white-space: nowrap; flex: none; }
+  .mfoot small, .mwa small { font-size: 12.5px; }
   .chat .bub { max-width: 92%; }
   .stk-sum b { font-size: 18px; }
   .mb-menus, .mb-app, .mb-search-label { display: none; }
@@ -583,7 +593,8 @@ table.stk { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 
     ['Power BI', 'Dados & BI', '#2EE59D'], ['Tableau', 'Dados & BI', '#2EE59D'], ['Google Analytics', 'Dados & BI', '#2EE59D'], ['Prep Builder', 'Dados & BI', '#2EE59D'],
     ['React', 'Desenvolvimento', '#FF9A57'], ['Node.js', 'Desenvolvimento', '#FF9A57'], ['Docker', 'Desenvolvimento', '#FF9A57'], ['Banco de dados', 'Desenvolvimento', '#FF9A57'], ['UX/UI', 'Desenvolvimento', '#FF9A57']
   ];
-  var EMAIL = 'ycarocampovilla@gmail.com', PHONE = '+55 (19) 97410-2267';
+  var EMAIL = 'ycarocampovilla@gmail.com', PHONE = '+55 (19) 97410-2267', WA = '5519974102267';
+  function waLink(t) { return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(t || 'Olá, Ycaro! Vi seu portfólio e quero conversar.'); }
 
   /* ---------- motor de RAG ---------- */
   var CH = [
@@ -801,7 +812,7 @@ table.stk { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 
       open: function (a) { var t = (a[0] || '').toLowerCase(); var map = { curriculo: 'cv', 'curriculo.pdf': 'cv', email: 'mail', chat: 'ai', 'ycaro.ai': 'ai', sobre: 'sobre', settings: 'ajustes', readme: 'leiame' }; t = map[t] || t; if (APPS[t]) { open(t); print('<span class="t-g">abrindo ' + NAMES[t] + '…</span>'); } else if (PROJ.some(function (p) { return p.id === t; })) { open('case:' + t); print('<span class="t-g">abrindo estudo de caso…</span>'); } else print('open: "' + esc(a[0] || '') + '" não existe. Apps: ' + Object.keys(APPS).join(', ')); },
       ia: function (a) { if (!a.length) return print('uso: ia &lt;pergunta&gt;'); var res = rag(a.join(' ')); print('<span class="t-p">ycaro.ai ›</span> ' + esc(res.text) + (res.src.length ? '\n<span class="t-d">fontes: ' + res.src.map(function (s) { return s.s + ' (' + s.v.toFixed(2) + ')'; }).join(', ') + '</span>' : '')); },
       stack: function () { var g = {}; STACK.forEach(function (s) { (g[s[1]] = g[s[1]] || []).push(s[0]); }); print(Object.keys(g).map(function (k) { return '<span class="t-a">' + (k + ':           ').slice(0, 17) + '</span>' + g[k].join(', '); }).join('\n')); },
-      contato: function () { print('e-mail    <span class="t-b">' + EMAIL + '</span>\ntelefone  <span class="t-b">' + PHONE + '</span>\n<span class="lk" data-open="mail">escrever mensagem →</span>'); },
+      contato: function () { print('e-mail    <span class="t-b">' + EMAIL + '</span>\ntelefone  <span class="t-b">' + PHONE + '</span>\nwhatsapp  <a href="' + waLink('') + '" target="_blank" rel="noopener">wa.me/' + WA + '</a>\n<span class="lk" data-open="mail">escrever mensagem →</span>'); },
       tema: function (a) { var t = norm(a[0] || ''); var n = (t === 'escuro' || t === 'tinta') ? 'tinta' : (t === 'claro' || t === 'papel') ? 'papel' : null; if (n) { setWall(n, true); print('<span class="t-g">tema: ' + WALLS[n].name + '</span>'); } else print('uso: tema claro | tema escuro'); },
       wallpaper: function (a) { var n = norm(a[0] || ''); if (WALLS[n]) { setWall(n, true); print('<span class="t-g">papel de parede: ' + WALLS[n].name + '</span>'); } else print('uso: wallpaper ' + Object.keys(WALLS).join(' | ')); },
       sudo: function (a) { if ((a[0] || '').toLowerCase() === 'contratar') { print('[sudo] senha para recrutador: ••••••••\n<span class="t-g">✔ Permissão concedida.</span> Abrindo o Mail com uma proposta em branco…'); setTimeout(function () { open('mail', { subject: 'Proposta para o Ycaro' }); }, 700); } else print('sudo: você não tem permissão para isso. Só para <span class="t-a">sudo contratar</span>.'); },
@@ -879,9 +890,13 @@ table.stk { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 
       '<div class="mrow"><label for="me">Seu e-mail</label><input id="me" name="email" type="email" autocomplete="email" required></div>' +
       '<div class="mrow"><label for="ms">Assunto</label><input id="ms" name="subject" value=""></div>' +
       '<label class="hp" for="mm">Mensagem</label><textarea id="mm" name="message" placeholder="Escreva sua mensagem…" required></textarea><input class="hp" id="mhp" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">' +
-      '<div class="mfoot"><small id="mst">A mensagem chega direto no meu e-mail.</small><button class="btn pri" type="submit" id="msend">Enviar ↗</button></div></form>';
+      '<div class="mfoot"><small id="mst">A mensagem chega direto no meu e-mail.</small><button class="btn pri" type="submit" id="msend">Enviar por e-mail ↗</button></div>' +
+      '<div class="mwa"><small>Prefere conversar agora? Mande no WhatsApp, a mensagem já vai preenchida.</small><a class="btn wa" id="mwa" href="' + waLink('') + '" target="_blank" rel="noopener"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 2.2a9.7 9.7 0 0 0-8.4 14.6L2.2 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 19.9zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6a2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.2-.2-.4-.3z\"/></svg>WhatsApp</a></div></form>';
     var f = r.body.querySelector('form'), st = r.body.querySelector('#mst'), send = r.body.querySelector('#msend');
     if (opts && opts.subject) r.body.querySelector('#ms').value = opts.subject;
+    var wa = r.body.querySelector('#mwa');
+    function syncWa() { var n = r.body.querySelector('#mn').value.trim(), sub = r.body.querySelector('#ms').value.trim(), m = r.body.querySelector('#mm').value.trim(); var t = 'Olá, Ycaro!' + (n ? ' Aqui é ' + n + '.' : '') + (sub ? ' Assunto: ' + sub + '.' : '') + (m ? '\n\n' + m : ' Vi seu portfólio e quero conversar.'); wa.href = waLink(t); }
+    r.body.querySelectorAll('#mn, #ms, #mm').forEach(function (el) { el.addEventListener('input', syncWa); }); syncWa();
     f.addEventListener('submit', function (e) {
       e.preventDefault();
       if (r.body.querySelector('#mhp').value) return;
@@ -896,7 +911,7 @@ table.stk { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 
           st.textContent = 'Não consegui enviar daqui.'; st.style.color = 'var(--accent)';
           notify({ icon: 'mail', title: 'Envio indisponível aqui', body: 'Escreva para ' + EMAIL + '. Toque para copiar o endereço.', ms: 10000, action: function () { if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(function () { notify({ icon: 'mail', title: 'Copiado', body: EMAIL, ms: 2500 }); }, function () {}); } });
         })
-        .then(function () { send.disabled = false; send.textContent = 'Enviar ↗'; });
+        .then(function () { send.disabled = false; send.textContent = 'Enviar por e-mail ↗'; });
     });
     setTimeout(function () { var n = r.body.querySelector('#mn'); if (n && !isMobile()) n.focus({ preventScroll: true }); }, 60);
   }
@@ -935,7 +950,7 @@ table.stk { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 
   var spotBg = $('spotBg'), spotQ = $('spotQ'), spotList = $('spotList'), items = [], sel = 0;
   var ALL = Object.keys(APPS).map(function (k) { return { t: NAMES[k], k: 'App', ic: k, go: function () { open(k); } }; })
     .concat(PROJ.map(function (p) { return { t: p.title, k: 'Projeto', ic: 'case', go: function () { open('case:' + p.id); } }; }))
-    .concat([{ t: 'Mandar mensagem', k: 'Ação', ic: 'mail', go: function () { open('mail'); } }, { t: 'Alternar tema claro / escuro', k: 'Ação', ic: 'ajustes', go: function () { setWall(curWall === 'tinta' ? 'papel' : 'tinta', true); } }]);
+    .concat([{ t: 'Mandar mensagem', k: 'Ação', ic: 'mail', go: function () { open('mail'); } }, { t: 'Conversar no WhatsApp', k: 'Ação', ic: 'mail', go: function () { window.open(waLink(''), '_blank', 'noopener'); } }, { t: 'Alternar tema claro / escuro', k: 'Ação', ic: 'ajustes', go: function () { setWall(curWall === 'tinta' ? 'papel' : 'tinta', true); } }]);
   function spotDraw() {
     var q = norm(spotQ.value);
     items = ALL.filter(function (x) { return !q || norm(x.t + ' ' + x.k).indexOf(q) >= 0; }).slice(0, 8);
